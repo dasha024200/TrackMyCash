@@ -1,0 +1,76 @@
+/* Навігаційний бренд (логотип) */
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  color: #da5070 !important; /* Ваш основний рожевий */
+  font-weight: 700;
+}
+
+/* Звичайні посилання */
+a {
+  color: #c86083; /* М'який рожевий */
+  transition: 0.2s;
+}
+
+a:hover {
+  color: #da5070;
+  text-decoration: none;
+}
+
+/* Основна кнопка (тепер рожева замість синьої) */
+.btn-primary {
+  color: #fff;
+  background-color: #da5070; /* Primary Pink */
+  border-color: #c86083;
+  border-radius: 12px; /* Більш заокруглені кути для "мобільного" вигляду */
+  padding: 8px 20px;
+  box-shadow: 0 4px 6px rgba(218, 80, 112, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #ad3f59; /* Темніший при наведенні */
+  border-color: #ad3f59;
+  transform: translateY(-1px);
+}
+
+/* Активні елементи меню (Nav Pills) */
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #da5070;
+  border-color: #c86083;
+}
+
+/* Рамки у ніжних тонах */
+.border-top {
+  border-top: 1px solid #fce4ec;
+}
+.border-bottom {
+  border-bottom: 1px solid #fce4ec;
+}
+
+/* Тінь з рожевим відтінком */
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(218, 80, 112, .08);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+  background-color: #da5070;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Футер */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+  background-color: #fff5f7; /* Дуже світлий рожевий фон */
+  border-top: 1px solid #fce4ec;
+  color: #c86083;
+}

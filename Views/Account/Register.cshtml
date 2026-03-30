@@ -1,0 +1,35 @@
+@model TrackMyCash.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Реєстрація";
+}
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-5">
+            <div class="auth-card">
+                <h2 class="text-center fw-bold mb-4" style="color: var(--primary-pink);">💖 TrackMyCash</h2>
+                <p class="text-center text-muted mb-4">Створіть свій фінансовий щоденник</p>
+
+                <form asp-action="Register" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="example@mail.com" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Пароль</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Підтвердження пароля</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 shadow">Зареєструватися</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small>Вже є акаунт? <a asp-action="Login" style="color: var(--primary-pink); text-decoration: none;">Увійти</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
