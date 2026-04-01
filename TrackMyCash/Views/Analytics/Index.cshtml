@@ -1,0 +1,101 @@
+@model TrackMyCash.Models.ViewModels.AnalyticsViewModel
+@{
+    ViewData["Title"] = "Аналітика - TrackMyCash";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center text-pink mb-4">📊 Аналітика витрат і доходів</h1>
+
+    <!-- Вибір періоду -->
+    <div class="text-center mb-4">
+        <a asp-action="Index" asp-route-period="Week" class="btn @(Model.SelectedPeriod == "Week" ? "btn-pink" : "btn-outline-pink")">Тиждень</a>
+        <a asp-action="Index" asp-route-period="Month" class="btn @(Model.SelectedPeriod == "Month" ? "btn-pink" : "btn-outline-pink")">Місяць</a>
+        <a asp-action="Index" asp-route-period="Year" class="btn @(Model.SelectedPeriod == "Year" ? "btn-pink" : "btn-outline-pink")">Рік</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5>Загальний дохід</h5>
+                <h3 class="text-success">@Model.TotalIncome.ToString("C")</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5>Загальні витрати</h5>
+                <h3 class="text-danger">@Model.TotalExpense.ToString("C")</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5>Баланс</h5>
+                <h3 class="@(Model.Balance >= 0 ? "text-success" : "text-danger")">@Model.Balance.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Діаграма -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <canvas id="financeChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Останні транзакції -->
+    <h4 class="mt-5">Останні операції</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Категорія</th>
+                <th>Сума</th>
+                <th>Коментар</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.RecentTransactions)
+            {
+                <tr>
+                    <td>@t.DateCreated.ToShortDateString()</td>
+                    <td>@(t.Type == "Income" ? "➕" : "➖")</td>
+                    <td>@t.Category?.Name</td>
+                    <td class="@(t.Type == "Income" ? "text-success" : "text-danger")">@t.Amount.ToString("C")</td>
+                    <td>@t.Comment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('financeChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: JSON.parse('@Html.Raw(Model.LabelsJson)'),
+                datasets: [
+                    {
+                        label: 'Дохід',
+                        data: JSON.parse('@Html.Raw(Model.IncomeDataJson)'),
+                        backgroundColor: '#ff69b4'
+                    },
+                    {
+                        label: 'Витрати',
+                        data: JSON.parse('@Html.Raw(Model.ExpenseDataJson)'),
+                        backgroundColor: '#ff1493'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

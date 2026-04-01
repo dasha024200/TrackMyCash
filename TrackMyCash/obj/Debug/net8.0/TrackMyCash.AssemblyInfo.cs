@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TrackMyCash")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac1037450775c443b58106c2524f1ae01f7a03aa")]
 [assembly: System.Reflection.AssemblyProductAttribute("TrackMyCash")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TrackMyCash")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 using TrackMyCash.Services;
-using TrackMyCash.ViewModels;
+using TrackMyCash.Models.ViewModels;
 
 namespace TrackMyCash.Controllers;
 
@@ -56,14 +59,24 @@ public class AccountController : Controller
             return View(model);
         }
 
-        HttpContext.Session.SetInt32("UserId", user.Id);
-        HttpContext.Session.SetString("UserEmail", user.Email);
+        HttpContext.Session.SetString("UserId", user.Id);
+        HttpContext.Session.SetString("UserEmail", user.Email ?? string.Empty);
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
         return RedirectToAction("Login");
     }

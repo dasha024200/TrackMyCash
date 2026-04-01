@@ -7,7 +7,7 @@ public class Category
     public string Type { get; set; } = string.Empty; // Income / Expense
     public bool IsDefault { get; set; }
 
-    public int? UserId { get; set; }
+    public string? UserId { get; set; }
     public User? User { get; set; }
 
     public List<Transaction> Transactions { get; set; } = new();

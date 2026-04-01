@@ -15,11 +15,21 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
         return View();
     }
 
     public IActionResult Privacy()
     {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
         return View();
     }
 

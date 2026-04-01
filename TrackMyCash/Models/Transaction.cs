@@ -8,7 +8,7 @@ public class Transaction
     public string? Comment { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-    public int UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
     public User? User { get; set; }
 
     public int CategoryId { get; set; }
