@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TrackMyCash.props" />
+</Project>

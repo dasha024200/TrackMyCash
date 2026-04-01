@@ -1,0 +1,39 @@
+@model TrackMyCash.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Реєстрація";
+}
+
+<h2>Реєстрація</h2>
+
+<form asp-action="Register" method="post">
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email" style="color:red"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password" style="color:red"></span>
+    </div>
+
+    <div>
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" />
+        <span asp-validation-for="ConfirmPassword" style="color:red"></span>
+    </div>
+
+    <div asp-validation-summary="All" style="color:red"></div>
+
+    <button type="submit">Зареєструватися</button>
+</form>
+
+<p>
+    Вже є акаунт? <a asp-action="Login">Увійти</a>
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
