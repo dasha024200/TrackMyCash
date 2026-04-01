@@ -79,7 +79,7 @@ namespace TrackMyCash.Services
                 return (false, "Користувач не автентифікований");
 
             var category = await _context.Categories
-                .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+                .FirstOrDefaultAsync(c => c.Id == id && (c.UserId == userId || c.IsDefault));
 
             if (category == null)
                 return (false, "Категорію не знайдено");

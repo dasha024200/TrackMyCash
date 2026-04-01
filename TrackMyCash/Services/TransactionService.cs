@@ -47,7 +47,6 @@ namespace TrackMyCash.Services
                 return null;
 
             return await _context.Transactions
-                .Include(t => t.Category)
                 .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
         }
 
@@ -94,7 +93,6 @@ namespace TrackMyCash.Services
                 return new List<Transaction>();
 
             return await _context.Transactions
-                .Include(t => t.Category)
                 .Where(t => t.UserId == userId)
                 .OrderByDescending(t => t.DateCreated)
                 .Take(count)
@@ -107,7 +105,6 @@ namespace TrackMyCash.Services
                 return new List<Transaction>();
 
             return await _context.Transactions
-                .Include(t => t.Category)
                 .Where(t => t.UserId == userId)
                 .OrderByDescending(t => t.DateCreated)
                 .ToListAsync();
