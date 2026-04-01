@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UvtfCwGJ81uZ77PQ97JJVYqz7b/lRcKjU0VpIF1uRRXTQCgXoy9WSALX9KdXYMh5E+oWpQUz7Ibr8BJCsXG5nw==",
+  "dgSpecHash": "7hfZ/5bOyGwmaH2kV2rUfonSI4VAzhS50XBb6Mm7uaz9EAJ1Le/XpyJzUCkM7gPUvV7eq3K+VJHXs7mhNjR74Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\Дарина\\OneDrive\\Робочий стіл\\TrackMyCash\\TrackMyCash\\TrackMyCash.csproj",
   "expectedPackageFiles": [
@@ -37,6 +37,7 @@
     "C:\\Users\\Дарина\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\Дарина\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "C:\\Users\\Дарина\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Дарина\\.nuget\\packages\\questpdf\\2024.12.0\\questpdf.2024.12.0.nupkg.sha512",
     "C:\\Users\\Дарина\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.6\\sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
     "C:\\Users\\Дарина\\.nuget\\packages\\sqlitepclraw.core\\2.1.6\\sqlitepclraw.core.2.1.6.nupkg.sha512",
     "C:\\Users\\Дарина\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.6\\sqlitepclraw.lib.e_sqlite3.2.1.6.nupkg.sha512",

@@ -1,0 +1,92 @@
+@model List<TrackMyCash.Models.Transaction>
+@{
+    ViewData["Title"] = "Усі транзакції - TrackMyCash";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="text-pink">📋 Усі транзакції</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-pink me-2">
+                <i class="bi bi-plus-circle"></i> Додати транзакцію
+            </a>
+            <div class="btn-group me-2" role="group">
+                <a asp-action="ExportPDF" class="btn btn-outline-info" title="Експортувати PDF">🧾 PDF</a>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center p-4">
+            <h5>Немає транзакцій</h5>
+            <p>Почніть додавати транзакції, щоб побачити їх тут.</p>
+            <a asp-action="Create" class="btn btn-pink">Додати першу транзакцію</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Тип</th>
+                        <th>Категорія</th>
+                        <th style="text-align: right;">Сума</th>
+                        <th>Коментар</th>
+                        <th style="text-align: center;">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.DateCreated.ToShortDateString()</td>
+                            <td>
+                                @if (transaction.Type == "Income")
+                                {
+                                    <span class="badge bg-success">➕ Дохід</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">➖ Витрата</span>
+                                }
+                            </td>
+                            <td>@(transaction.Category?.Name ?? "Не вказано")</td>
+                            <td style="text-align: right;">
+                                <span class="@(transaction.Type == "Income" ? "text-success" : "text-danger") fw-bold">
+                                    @(transaction.Type == "Income" ? "+" : "-")@transaction.Amount.ToString("C")
+                                </span>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(transaction.Comment))
+                                {
+                                    <small>@transaction.Comment</small>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">—</small>
+                                }
+                            </td>
+                            <td style="text-align: center;">
+                                <a asp-action="Edit" asp-route-id="@transaction.Id" class="btn btn-sm btn-outline-primary" title="Редагувати">
+                                    ✏️
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@transaction.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Видалити" 
+                                            onclick="return confirm('Ви впевнені?')" style="border:0;background:transparent;color:inherit;">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

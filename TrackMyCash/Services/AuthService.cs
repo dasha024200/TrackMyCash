@@ -1,44 +1,74 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TrackMyCash.Data;
 using TrackMyCash.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TrackMyCash.Services;
-
-public class AuthService
+namespace TrackMyCash.Services
 {
-    private readonly ApplicationDbContext _context;
-
-    public AuthService(ApplicationDbContext context)
+    public class AuthService
     {
-        _context = context;
-    }
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-    public async Task<bool> RegisterAsync(string email, string password)
-    {
-        if (await _context.Users.AnyAsync(u => u.Email == email))
-            return false;
-
-        var user = new User
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            Email = email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-            CreatedAt = DateTime.UtcNow
-        };
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-        return true;
-    }
+        // Реєстрація користувача
+        public async Task<(bool Success, string Message)> RegisterAsync(string email, string password)
+        {
+            // Перевіряємо, чи вже існує користувач з таким email або ім'ям
+            if (await _userManager.FindByEmailAsync(email) != null || await _userManager.FindByNameAsync(email) != null)
+                return (false, "Користувач з таким email вже існує");
 
-    public async Task<User?> LoginAsync(string email, string password)
-    {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = new User 
+            { 
+                UserName = email, 
+                Email = email,
+                CreatedAt = DateTime.UtcNow
+            };
 
-        if (user == null)
-            return null;
+            try
+            {
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                    return (true, "Реєстрація пройшла успішно!");
 
-        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return (false, string.IsNullOrEmpty(errors) ? "Не вдалося зареєструвати користувача" : errors);
+            }
+            catch (DbUpdateException)
+            {
+                return (false, "Користувач з таким email вже існує");
+            }
+            catch (Exception)
+            {
+                return (false, "Сталася несподівана помилка. Спробуйте ще раз пізніше.");
+            }
+        }
 
-        return isPasswordValid ? user : null;
+        // Логін користувача
+        public async Task<(bool Success, string Message)> LoginAsync(string email, string password, bool rememberMe)
+        {
+            var result = await _signInManager.PasswordSignInAsync(
+                email, 
+                password, 
+                rememberMe, 
+                lockoutOnFailure: false);
+
+            return result.Succeeded 
+                ? (true, "Успішний вхід") 
+                : (false, "Невірний email або пароль");
+        }
+
+        // Вихід
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

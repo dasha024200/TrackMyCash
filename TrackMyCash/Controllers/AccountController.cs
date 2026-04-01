@@ -1,83 +1,71 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
-using TrackMyCash.Services;
 using TrackMyCash.Models.ViewModels;
+using TrackMyCash.Services;
+using System.Threading.Tasks;
 
-namespace TrackMyCash.Controllers;
-
-public class AccountController : Controller
+namespace TrackMyCash.Controllers
 {
-    private readonly AuthService _authService;
-
-    public AccountController(AuthService authService)
+    public class AccountController : Controller
     {
-        _authService = authService;
-    }
+        private readonly AuthService _authService;
 
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        bool success = await _authService.RegisterAsync(model.Email, model.Password);
-
-        if (!success)
+        public AccountController(AuthService authService)
         {
-            ModelState.AddModelError("", "Користувач з таким email вже існує");
+            _authService = authService;
+        }
+
+        [HttpGet]
+        public IActionResult Register() => View(new RegisterViewModel());
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _authService.RegisterAsync(model.Email, model.Password);
+            if (result.Success)
+            {
+                TempData["Success"] = "Реєстрація пройшла успішно!";
+                return RedirectToAction("Login");
+            }
+
+            ModelState.AddModelError("", result.Message);
             return View(model);
         }
 
-        return RedirectToAction("Login");
-    }
-
-    [HttpGet]
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        var user = await _authService.LoginAsync(model.Email, model.Password);
-
-        if (user == null)
+        [HttpGet]
+        public IActionResult Login(string? returnUrl = null)
         {
-            ModelState.AddModelError("", "Невірний email або пароль");
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new LoginViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _authService.LoginAsync(model.Email, model.Password, model.RememberMe);
+            if (result.Success)
+                return RedirectToLocal(returnUrl);
+
+            ModelState.AddModelError("", result.Message);
             return View(model);
         }
 
-        HttpContext.Session.SetString("UserId", user.Id);
-        HttpContext.Session.SetString("UserEmail", user.Email ?? string.Empty);
-
-        var claims = new List<Claim>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
-        };
+            await _authService.LogoutAsync();
+            return RedirectToAction("Login");
+        }
 
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-        return RedirectToAction("Index", "Home");
-    }
-
-    public async Task<IActionResult> Logout()
-    {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        HttpContext.Session.Clear();
-        return RedirectToAction("Login");
+        private IActionResult RedirectToLocal(string? returnUrl)
+        {
+            return Url.IsLocalUrl(returnUrl) ? Redirect(returnUrl) : RedirectToAction("Index", "Home");
+        }
     }
 }

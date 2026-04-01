@@ -1,32 +1,49 @@
 @model TrackMyCash.Models.ViewModels.LoginViewModel
 
 @{
-    ViewData["Title"] = "Вхід";
+    ViewData["Title"] = "Вхід - TrackMyCash";
 }
 
-<h2>Вхід</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header bg-pink text-white">
+                    <h4 class="mb-0 text-center">💖 Вхід до TrackMyCash</h4>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Електронна пошта</label>
+                            <input asp-for="Email" class="form-control" type="email" placeholder="your@email.com" required>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
-<form asp-action="Login" method="post">
-    <div>
-        <label asp-for="Email"></label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email" style="color:red"></span>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Пароль</label>
+                            <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" required>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+                        }
+
+                        <button type="submit" class="btn btn-pink w-100 mb-3">🔓 Увійти</button>
+                    </form>
+
+                    <div class="text-center">
+                        <p>
+                            Немає акаунта?
+                            <a asp-action="Register" class="action-link">Зареєструватися</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password" style="color:red"></span>
-    </div>
-
-    <div asp-validation-summary="All" style="color:red"></div>
-
-    <button type="submit">Увійти</button>
-</form>
-
-<p>
-    Немає акаунта? <a asp-action="Register">Зареєструватися</a>
-</p>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

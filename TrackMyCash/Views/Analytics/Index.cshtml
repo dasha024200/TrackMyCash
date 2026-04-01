@@ -59,7 +59,7 @@
                 <tr>
                     <td>@t.DateCreated.ToShortDateString()</td>
                     <td>@(t.Type == "Income" ? "➕" : "➖")</td>
-                    <td>@t.Category?.Name</td>
+                    <td>@(t.Category?.Name ?? "Не вказано")</td>
                     <td class="@(t.Type == "Income" ? "text-success" : "text-danger")">@t.Amount.ToString("C")</td>
                     <td>@t.Comment</td>
                 </tr>

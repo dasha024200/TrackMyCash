@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TrackMyCash.Data;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace TrackMyCash.Services
 {
@@ -18,19 +19,25 @@ namespace TrackMyCash.Services
             if (string.IsNullOrEmpty(userId))
                 return 0m;
 
-            var income = await _context.Transactions
-                .Where(t => t.UserId == userId && t.Type == "Income")
-                .SumAsync(t => t.Amount);
+            // Використовуємо client-side Sum для decimal у SQLite
+            var transactions = await _context.Transactions
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
 
-            var expense = await _context.Transactions
-                .Where(t => t.UserId == userId && t.Type == "Expense")
-                .SumAsync(t => t.Amount);
+            decimal income = transactions
+                .Where(t => t.Type == "Income")
+                .Sum(t => t.Amount);
+
+            decimal expense = transactions
+                .Where(t => t.Type == "Expense")
+                .Sum(t => t.Amount);
 
             return income - expense;
         }
 
         public async Task UpdateBalanceAsync(string? userId)
         {
+            // Observer поки що порожній, бо баланс рахуємо динамічно
             await Task.CompletedTask;
         }
     }

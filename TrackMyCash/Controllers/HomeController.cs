@@ -1,41 +1,77 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using TrackMyCash.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using TrackMyCash.Services;
+using TrackMyCash.Models.ViewModels;
+using System.Threading.Tasks;
+using System.Linq;
 
-namespace TrackMyCash.Controllers;
-
-public class HomeController : Controller
+namespace TrackMyCash.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    [Authorize]
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly TransactionService _transactionService;
+        private readonly BalanceService _balanceService;
+        private readonly CategoryService _categoryService;
 
-    public IActionResult Index()
-    {
-        if (!User.Identity?.IsAuthenticated ?? true)
+        public HomeController(
+            TransactionService transactionService, 
+            BalanceService balanceService, 
+            CategoryService categoryService)
         {
-            return RedirectToAction("Login", "Account");
+            _transactionService = transactionService;
+            _balanceService = balanceService;
+            _categoryService = categoryService;
         }
 
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        if (!User.Identity?.IsAuthenticated ?? true)
+        public async Task<IActionResult> Index()
         {
-            return RedirectToAction("Login", "Account");
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Account");
+
+            var balance = await _balanceService.GetBalanceAsync(userId);
+            var recentTransactions = await _transactionService.GetRecentTransactionsAsync(userId, 10);
+            var categories = await _categoryService.GetCategoriesAsync(userId);
+
+            var model = new HomeViewModel
+            {
+                Balance = balance,
+                RecentTransactions = recentTransactions
+            };
+
+            // Заповнення випадаючого списку категорій
+            ViewBag.Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = $"{c.Name} ({c.Type})"
+            }).ToList();
+
+            return View(model);
         }
 
-        return View();
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddQuickTransaction(TransactionViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction(nameof(Index));
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Account");
+
+            var result = await _transactionService.CreateTransactionAsync(model, userId);
+
+            if (result.Success)
+                TempData["Success"] = "Транзакцію успішно додано!";
+            else
+                TempData["Error"] = result.Message;
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

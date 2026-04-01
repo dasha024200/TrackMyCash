@@ -1,3 +1,11 @@
+/* ===== Color Scheme ===== */
+:root {
+  --pink-primary: #ff69b4;
+  --pink-dark: #ff1493;
+  --pink-light: #ffb6d9;
+  --pink-pale: #ffe4f0;
+}
+
 html {
   font-size: 14px;
 }
@@ -8,10 +16,6 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
 html {
   position: relative;
   min-height: 100%;
@@ -19,4 +23,172 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #fff9fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== Navigation ===== */
+.bg-pink {
+  background: linear-gradient(135deg, #ff69b4, #ff1493) !important;
+  box-shadow: 0 2px 8px rgba(255, 20, 147, 0.2);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* ===== Buttons ===== */
+.btn-pink {
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  border: none;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+  background: linear-gradient(135deg, #ff1493, #c71585);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+}
+
+.btn-outline-pink {
+  color: #ff69b4;
+  border-color: #ff69b4;
+}
+
+.btn-outline-pink:hover {
+  background-color: #ffb6d9;
+  border-color: #ff1493;
+  color: #fff;
+}
+
+/* ===== Text Colors ===== */
+.text-pink {
+  color: #ff1493 !important;
+}
+
+.text-pink-light {
+  color: #ff69b4 !important;
+}
+
+/* ===== Cards ===== */
+.card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(255, 20, 147, 0.15);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+/* ===== Balance Card ===== */
+.balance-card {
+  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(255, 20, 147, 0.3);
+  transition: all 0.3s ease;
+}
+
+.balance-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(255, 20, 147, 0.4);
+}
+
+.balance-card h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Forms ===== */
+.form-control, .form-select {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #ff69b4;
+  box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+}
+
+/* ===== Tables ===== */
+.table {
+  background-color: white;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #ffe4f0;
+}
+
+.table-striped > tbody > tr:hover {
+  background-color: #ffb6d9;
+}
+
+.table thead {
+  background-color: #ff69b4;
+  color: white;
+}
+
+.table thead th {
+  font-weight: 600;
+  border: none;
+}
+
+/* ===== Alerts ===== */
+.alert-success {
+  background-color: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+/* ===== Headers ===== */
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== Focus and Interaction ===== */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .balance-card h2 {
+    font-size: 2rem;
+  }
+}
+
+/* ===== Action Links ===== */
+.action-link {
+  color: #ff69b4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.action-link:hover {
+  color: #ff1493;
+  text-decoration: underline;
 }
